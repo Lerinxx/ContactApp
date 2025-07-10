@@ -20,6 +20,11 @@ final class ContactManager {
     
     func deleteContact(_ contact: Contact) {
         contacts.removeAll { $0.id == contact.id }
+        
+        if let filename = contact.imageFilename {
+            try? ImageStorage.shared.deleteImage(filename: filename)
+        }
+        
         persist()
     }
     
