@@ -41,10 +41,10 @@ class ViewController: UIViewController {
     }
     
     @objc private func addTapped() {
-        let addVC = AddContactViewController()
-        addVC.delegate = self
-        let nav = UINavigationController(rootViewController: addVC)
-        present(nav, animated: true)
+        let controller = AddContactViewController()
+        controller.delegate = self
+        let navController = UINavigationController(rootViewController: controller)
+        present(navController, animated: true)
     }
 }
 
@@ -64,13 +64,11 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
-                   forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            let contact = contactManager.contacts[indexPath.row]
-            contactManager.deleteContact(contact)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedContact = contactManager.contacts[indexPath.row]
+        let detailVC = ContactDetailViewController(contact: selectedContact)
+        detailVC.delegate = self
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
@@ -78,6 +76,20 @@ extension ViewController: AddContactDelegate {
     func didAddContact(_ contact: Contact) {
         contactManager.addContact(contact)
         contactsTable.reloadData()
+    }
+}
+
+extension ViewController: EditContactDelegate {
+    func didUpdateContact(_ contact: Contact) {
+        contactManager.updateContact(contact)
+        contactsTable.reloadData()
+    }
+    
+    func didDeleteContact(_ contact: Contact) {
+        if let index = contactManager.contacts.firstIndex(where: { $0.id == contact.id }) {
+            contactManager.deleteContact(contact)
+            contactsTable.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        }
     }
 }
 
