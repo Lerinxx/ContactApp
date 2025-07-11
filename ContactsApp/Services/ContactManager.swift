@@ -1,7 +1,7 @@
 import Foundation
 
 final class ContactManager {
-    private(set) var contacts: [Contact] = []
+    var contacts: [Contact] = []
     
     init() {
         loadContacts()

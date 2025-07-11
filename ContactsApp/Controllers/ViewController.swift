@@ -2,6 +2,7 @@ import UIKit
 
 class ViewController: UIViewController {
     private let contactManager = ContactManager()
+    private var currentSorter: ContactSorter = NameSorter()
     
     private lazy var contactsTable: UITableView = {
         let tableView = UITableView()
@@ -15,7 +16,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configUI()
-        setupNavigationBar()
+        configNavigationBar()
         title = "Contacts"
         print("lol")
     }
@@ -32,12 +33,23 @@ class ViewController: UIViewController {
         ])
     }
     
-    private func setupNavigationBar() {
+    private func configNavigationBar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
             target: self,
             action: #selector(addTapped)
         )
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "Sort",
+            style: .plain,
+            target: self,
+            action: #selector(sortTapped)
+        )
+    }
+    
+    private func applySorting() {
+        contactManager.contacts = currentSorter.sort(contactManager.contacts)
+        contactsTable.reloadData()
     }
     
     @objc private func addTapped() {
@@ -45,6 +57,16 @@ class ViewController: UIViewController {
         controller.delegate = self
         let navController = UINavigationController(rootViewController: controller)
         present(navController, animated: true)
+    }
+    
+    @objc private func sortTapped() {
+        presentSortOptions {
+            self.currentSorter = NameSorter()
+            self.applySorting()
+        } onDateSelected: {
+            self.currentSorter = DateSorter()
+            self.applySorting()
+        }
     }
 }
 

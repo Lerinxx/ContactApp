@@ -24,4 +24,20 @@ extension UIViewController {
         
         present(alert, animated: true)
     }
+    
+    func presentSortOptions(onNameSelected: @escaping () -> Void, onDateSelected: @escaping () -> Void) {
+        let alert = UIAlertController(title: "Sort Contacts ⚙️", message: "Select sorting option", preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "By Name", style: .default, handler: { _ in
+                onNameSelected()
+            }))
+            
+            alert.addAction(UIAlertAction(title: "By Date Added", style: .default, handler: { _ in
+                onDateSelected()
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            
+            present(alert, animated: true)
+        }
 }
