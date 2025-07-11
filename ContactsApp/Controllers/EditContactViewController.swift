@@ -15,6 +15,8 @@ final class EditContactViewController: BaseContactViewController {
         btn.setTitle("Delete Contact", for: .normal)
         btn.setTitleColor(.systemRed, for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        btn.backgroundColor = .secondarySystemBackground
+        btn.layer.cornerRadius = 16
         btn.translatesAutoresizingMaskIntoConstraints = false
         return btn
     }()
@@ -40,9 +42,10 @@ final class EditContactViewController: BaseContactViewController {
         formView.addSubview(deleteBtn)
         
         NSLayoutConstraint.activate([
-            deleteBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            deleteBtn.heightAnchor.constraint(equalToConstant: 50),
-            deleteBtn.topAnchor.constraint(equalTo: formView.phoneField.bottomAnchor, constant: 20)
+            deleteBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            deleteBtn.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            deleteBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+            deleteBtn.heightAnchor.constraint(equalToConstant: 40)
         ])
         
         let deleteAction = UIAction { _ in

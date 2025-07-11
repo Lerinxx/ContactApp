@@ -8,10 +8,22 @@ protocol AddContactDelegate: AnyObject {
 final class AddContactViewController: BaseContactViewController {
     weak var delegate: AddContactDelegate?
     
+    private let addRandomBtn: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("Add Random Contact 🍀", for: .normal)
+        btn.setTitleColor(.label, for: .normal)
+        btn.backgroundColor = .secondarySystemBackground
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        btn.layer.cornerRadius = 16
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "New contact"
         configNavigation()
+        configRandomBtn()
     }
     
     private func configNavigation() {
@@ -26,6 +38,45 @@ final class AddContactViewController: BaseContactViewController {
             action: #selector(doneTapped)
         )
         navigationItem.rightBarButtonItem?.isEnabled = false
+    }
+    
+    private func configRandomBtn() {
+        view.addSubview(addRandomBtn)
+        
+        NSLayoutConstraint.activate([
+            addRandomBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            addRandomBtn.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            addRandomBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+            addRandomBtn.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        
+        let addAction = UIAction { _ in
+            self.addRandomBtnPressed()
+        }
+        addRandomBtn.addAction(addAction, for: .touchUpInside)
+    }
+    
+    private func addRandomBtnPressed() {
+        addRandomBtn.isEnabled = false
+        addRandomBtn.setTitle("Loading...", for: .normal)
+        
+        Task {
+            do {
+                let contact = try await ContactRemoteService.fetchRandom()
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.didAddContact(contact)
+                    self.dismiss(animated: true)
+                }
+            } catch {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.addRandomBtn.isEnabled = true
+                    self.addRandomBtn.setTitle("Add Random Contact 🍀", for: .normal)
+                    self.showAlert(message: "Couldn't add contact. Try again!")
+                }
+            }
+        }
     }
     
     @objc private func cancelTapped() {

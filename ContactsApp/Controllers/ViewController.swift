@@ -75,7 +75,9 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 extension ViewController: AddContactDelegate {
     func didAddContact(_ contact: Contact) {
         contactManager.addContact(contact)
-        contactsTable.reloadData()
+        let newIndex = contactManager.contacts.count - 1
+        let newIndexPath = IndexPath(row: newIndex, section: 0)
+        contactsTable.insertRows(at: [newIndexPath], with: .automatic)
     }
 }
 
