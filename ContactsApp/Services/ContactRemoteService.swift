@@ -18,6 +18,10 @@ enum ContactRemoteService {
             throw ContactRemoteError.decodingFailed
         }
         
+        return await toContactModel(user)
+    }
+    
+    static func toContactModel(_ user: RandomUser) async -> Contact {
         let name = "\(user.name.first) \(user.name.last)"
         let phone = user.phone
         let imageFilename = await RemoteImageService.fetchImage(urlString: user.picture.large)

@@ -4,6 +4,12 @@ import PhoneNumberKit
 class BaseContactViewController: UIViewController {
     let phoneUtil = PhoneNumberUtility()
     
+    var contact: Contact?
+    var isEditMode: Bool {
+        return contact != nil
+    }
+    var isPhotoChanged = false
+    
     private(set) var formView: ContactFormView = {
         let view = ContactFormView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -42,9 +48,21 @@ class BaseContactViewController: UIViewController {
     }
     
     @objc func textDidChange() {
-        let nameValid = !(formView.nameField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
-        let phoneValid = !(formView.phoneField.text?.isEmpty ?? true)
-        navigationItem.rightBarButtonItem?.isEnabled = nameValid && phoneValid
+        let nameText = formView.nameField.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        let phoneText = formView.phoneField.text ?? ""
+        
+        let nameValid = !nameText.isEmpty
+        let phoneValid = !phoneText.isEmpty
+        
+        if isEditMode, let original = contact {
+            let isNameChanged = nameText != original.name
+            let isPhoneChanged = phoneText != original.phone
+            
+            navigationItem.rightBarButtonItem?.isEnabled =
+            (isNameChanged || isPhoneChanged || isPhotoChanged) && nameValid && phoneValid
+        } else {
+            navigationItem.rightBarButtonItem?.isEnabled = nameValid && phoneValid
+        }
     }
     
     func getContactInfo(with id: UUID? = nil) -> Contact? {
@@ -83,9 +101,13 @@ extension BaseContactViewController: UIImagePickerControllerDelegate, UINavigati
         
         if let editedImage = info[.editedImage] as? UIImage {
             formView.imageView.image = editedImage
+            isPhotoChanged = true
         } else if let originalImage = info[.originalImage] as? UIImage {
             formView.imageView.image = originalImage
+            isPhotoChanged = true
         }
+        
+        textDidChange()
     }
 }
 

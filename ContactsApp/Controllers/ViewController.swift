@@ -18,7 +18,6 @@ class ViewController: UIViewController {
         configUI()
         configNavigationBar()
         title = "Contacts"
-        print("lol")
     }
     
     private func configUI() {
@@ -60,11 +59,13 @@ class ViewController: UIViewController {
     }
     
     @objc private func sortTapped() {
-        presentSortOptions {
-            self.currentSorter = NameSorter()
-            self.applySorting()
-        } onDateSelected: {
-            self.currentSorter = DateSorter()
+        presentSortOptions { option in
+            switch option {
+            case .name:
+                self.currentSorter = NameSorter()
+            case .date:
+                self.currentSorter = DateSorter()
+            }
             self.applySorting()
         }
     }
@@ -97,9 +98,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 extension ViewController: AddContactDelegate {
     func didAddContact(_ contact: Contact) {
         contactManager.addContact(contact)
-        let newIndex = contactManager.contacts.count - 1
-        let newIndexPath = IndexPath(row: newIndex, section: 0)
-        contactsTable.insertRows(at: [newIndexPath], with: .automatic)
+        applySorting()
     }
 }
 

@@ -8,7 +8,7 @@ protocol EditContactDelegate: AnyObject {
 
 final class EditContactViewController: BaseContactViewController {
     weak var delegate: EditContactDelegate?
-    private var contact: Contact
+    private var currentContact: Contact
     
     private let deleteBtn: UIButton = {
         let btn = UIButton(type: .system)
@@ -22,8 +22,9 @@ final class EditContactViewController: BaseContactViewController {
     }()
     
     init(contact: Contact) {
-        self.contact = contact
+        self.currentContact = contact
         super.init(nibName: nil, bundle: nil)
+        super.contact = contact
     }
     
     required init?(coder: NSCoder) {
@@ -56,13 +57,13 @@ final class EditContactViewController: BaseContactViewController {
     }
     
     private func configForm() {
-        formView.config(with: contact)
+        formView.config(with: currentContact)
     }
     
     private func deleteBtnTapped() {
-        showDeleteAlert(for: contact) { [weak self] in
+        showDeleteAlert(for: currentContact) { [weak self] in
             guard let self = self else { return }
-            self.delegate?.didDeleteContact(self.contact)
+            self.delegate?.didDeleteContact(self.currentContact)
             self.navigationController?.popToRootViewController(animated: true)
         }
     }
@@ -87,7 +88,7 @@ final class EditContactViewController: BaseContactViewController {
     }
     
     @objc private func doneTapped() {
-        guard let updatedContact = getContactInfo(with: contact.id) else {
+        guard let updatedContact = getContactInfo(with: currentContact.id) else {
             showAlert(message: "Failed to update contact.")
             return
         }
