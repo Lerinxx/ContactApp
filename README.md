@@ -23,6 +23,10 @@ ContactsApp is a simple iOS application for managing contacts. It supports addin
 - `Sorting/`
 - `Tests/`
 
+## Minimum Deployment Requirements
+
+- **iOS**: 16.0 or later  
+
 ## Getting Started
 
 ### Installation
@@ -44,7 +48,7 @@ Select Product > Test from the menu or press Cmd + U.
 
 To run tests from the terminal:
 ```bash
-xcodebuild test -scheme ContactsApp -destination 'platform=iOS Simulator,name=iPhone 14'
+xcodebuild test -scheme ContactsApp -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
 
 ### CI (GitHub Actions)
