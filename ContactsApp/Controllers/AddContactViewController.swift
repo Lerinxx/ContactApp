@@ -10,7 +10,7 @@ final class AddContactViewController: BaseContactViewController {
     
     private let addRandomBtn: UIButton = {
         let btn = UIButton(type: .system)
-        btn.setTitle("Add Random Contact 🍀", for: .normal)
+        btn.setTitle(Constants.addRandomTitle, for: .normal)
         btn.setTitleColor(.label, for: .normal)
         btn.backgroundColor = .secondarySystemBackground
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
@@ -21,7 +21,7 @@ final class AddContactViewController: BaseContactViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "New contact"
+        title = Constants.newContactTitle
         configNavigation()
         configRandomBtn()
     }
@@ -58,7 +58,7 @@ final class AddContactViewController: BaseContactViewController {
     
     private func addRandomBtnPressed() {
         addRandomBtn.isEnabled = false
-        addRandomBtn.setTitle("Loading...", for: .normal)
+        addRandomBtn.setTitle(Constants.loadingTitle, for: .normal)
         
         Task {
             do {
@@ -72,8 +72,8 @@ final class AddContactViewController: BaseContactViewController {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     self.addRandomBtn.isEnabled = true
-                    self.addRandomBtn.setTitle("Add Random Contact 🍀", for: .normal)
-                    self.showAlert(message: "Couldn't add contact. Try again!")
+                    self.addRandomBtn.setTitle(Constants.addRandomTitle, for: .normal)
+                    self.showAlert(message: Constants.errorAddingMessage)
                 }
             }
         }
@@ -85,7 +85,7 @@ final class AddContactViewController: BaseContactViewController {
     
     @objc private func doneTapped() {
         guard let contact = getContactInfo() else {
-            showAlert(message: "Failed to create contact")
+            showAlert(message: Constants.errorCreatingMessage)
             return
         }
         delegate?.didAddContact(contact)

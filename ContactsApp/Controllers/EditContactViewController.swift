@@ -12,7 +12,7 @@ final class EditContactViewController: BaseContactViewController {
     
     private let deleteBtn: UIButton = {
         let btn = UIButton(type: .system)
-        btn.setTitle("Delete Contact", for: .normal)
+        btn.setTitle(Constants.deleteContactTitle, for: .normal)
         btn.setTitleColor(.systemRed, for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         btn.backgroundColor = .secondarySystemBackground
@@ -33,7 +33,7 @@ final class EditContactViewController: BaseContactViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Edit contact"
+        title = Constants.editContactTitle
         configUI()
         configNavigation()
         configForm()
@@ -89,7 +89,7 @@ final class EditContactViewController: BaseContactViewController {
     
     @objc private func doneTapped() {
         guard let updatedContact = getContactInfo(with: currentContact.id) else {
-            showAlert(message: "Failed to update contact.")
+            showAlert(message: Constants.errorUpdateMessage)
             return
         }
         delegate?.didUpdateContact(updatedContact)

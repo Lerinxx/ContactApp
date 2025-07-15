@@ -14,7 +14,7 @@ final class ContactFormView: UIView {
     
     let photoBtn: UIButton = {
         let btn = UIButton(type: .system)
-        btn.setTitle("Add Photo", for: .normal)
+        btn.setTitle(Constants.photoBtnTitle, for: .normal)
         btn.setTitleColor(.label, for: .normal)
         btn.backgroundColor = .secondarySystemBackground
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
@@ -25,7 +25,7 @@ final class ContactFormView: UIView {
     
     let nameField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Name"
+        tf.placeholder = Constants.namePlaceholder
         tf.borderStyle = .roundedRect
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
@@ -33,7 +33,7 @@ final class ContactFormView: UIView {
     
     let phoneField: PhoneNumberTextField = {
         let tf = PhoneNumberTextField()
-        tf.placeholder = "Phone number"
+        tf.placeholder = Constants.phonePlaceholder
         tf.withPrefix = true
         tf.borderStyle = .roundedRect
         tf.translatesAutoresizingMaskIntoConstraints = false

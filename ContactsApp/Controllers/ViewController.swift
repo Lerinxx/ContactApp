@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         configUI()
         configNavigationBar()
-        title = "Contacts"
+        title = Constants.contactsTitle
     }
     
     private func configUI() {

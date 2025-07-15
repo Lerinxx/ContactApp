@@ -1,24 +1,24 @@
 import UIKit
 
 extension UIViewController {
-    func showAlert(title: String = "Error!", message: String) {
+    func showAlert(title: String = Constants.errorTitle, message: String) {
         let alert = UIAlertController(title: title,
                                       message: message,
                                       preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: Constants.okTitle, style: .default))
         present(alert, animated: true)
     }
     
     func showDeleteAlert(for contact: Contact, onConfirm: @escaping () -> Void) {
         let alert = UIAlertController(
-            title: "Delete Contact",
-            message: "Are you sure you want to delete this contact?",
+            title: Constants.deleteContactTitle,
+            message: Constants.deleteMessage,
             preferredStyle: .alert
         )
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { _ in
+        alert.addAction(UIAlertAction(title: Constants.cancelTitle, style: .cancel))
+        alert.addAction(UIAlertAction(title: Constants.deleteTitle, style: .destructive) { _ in
             onConfirm()
         })
         
@@ -27,20 +27,20 @@ extension UIViewController {
     
     func presentSortOptions(onOptionSelected: @escaping (SortOption) -> Void) {
         let alert = UIAlertController(
-            title: "Sort Contacts ⚙️",
-            message: "Select sorting option",
+            title: Constants.sortTitle,
+            message: Constants.sortMessage,
             preferredStyle: .actionSheet
         )
         
-        alert.addAction(UIAlertAction(title: "By Name", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: Constants.byNameTitle, style: .default, handler: { _ in
             onOptionSelected(.name)
         }))
         
-        alert.addAction(UIAlertAction(title: "By Date Edited", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: Constants.byDateTitle, style: .default, handler: { _ in
             onOptionSelected(.date)
         }))
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: Constants.cancelTitle, style: .cancel))
         
         present(alert, animated: true)
     }

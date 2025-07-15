@@ -7,7 +7,7 @@ enum ContactRemoteService {
     }
     
     static func fetchRandom() async throws -> Contact {
-        guard let url = URL(string: "https://randomuser.me/api/") else {
+        guard let url = URL(string: Constants.randomUserApi) else {
             throw ContactRemoteError.invalidURL
         }
         
