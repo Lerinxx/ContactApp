@@ -1,0 +1,98 @@
+import UIKit
+import PhoneNumberKit
+
+protocol EditContactDelegate: AnyObject {
+    func didUpdateContact(_ contact: Contact)
+    func didDeleteContact(_ contact: Contact)
+}
+
+final class EditContactViewController: BaseContactViewController {
+    weak var delegate: EditContactDelegate?
+    private var currentContact: Contact
+    
+    private let deleteBtn: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle(Constants.deleteContactTitle, for: .normal)
+        btn.setTitleColor(.systemRed, for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        btn.backgroundColor = .secondarySystemBackground
+        btn.layer.cornerRadius = 16
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
+    }()
+    
+    init(contact: Contact) {
+        self.currentContact = contact
+        super.init(nibName: nil, bundle: nil)
+        super.contact = contact
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = Constants.editContactTitle
+        configUI()
+        configNavigation()
+        configForm()
+    }
+    
+    private func configUI() {
+        formView.addSubview(deleteBtn)
+        
+        NSLayoutConstraint.activate([
+            deleteBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            deleteBtn.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            deleteBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+            deleteBtn.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        
+        let deleteAction = UIAction { _ in
+            self.deleteBtnTapped()
+        }
+        
+        deleteBtn.addAction(deleteAction, for: .touchUpInside)
+    }
+    
+    private func configForm() {
+        formView.config(with: currentContact)
+    }
+    
+    private func deleteBtnTapped() {
+        showDeleteAlert(for: currentContact) { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.didDeleteContact(self.currentContact)
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
+    
+    private func configNavigation() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .cancel,
+            target: self,
+            action: #selector(cancelTapped)
+        )
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Done",
+            style: .done,
+            target: self,
+            action: #selector(doneTapped)
+        )
+        navigationItem.rightBarButtonItem?.isEnabled = false
+    }
+    
+    @objc private func cancelTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func doneTapped() {
+        guard let updatedContact = getContactInfo(with: currentContact.id) else {
+            showAlert(message: Constants.errorUpdateMessage)
+            return
+        }
+        delegate?.didUpdateContact(updatedContact)
+        navigationController?.popToRootViewController(animated: true)
+    }
+}

@@ -1,10 +1,3 @@
-//
-//  ContactsAppTests.swift
-//  ContactsAppTests
-//
-//  Created by Valeria Trus on 8.07.25.
-//
-
 import XCTest
 @testable import ContactsApp
 
